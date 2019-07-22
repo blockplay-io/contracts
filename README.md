@@ -1,3 +1,3 @@
-# Smart Contracts running at http://blockplay.io
+# Smart Contracts running at https://blockplay.io
 
-This repository contains the smart contracts running on http://blockplay.io.
+This repository contains the smart contracts running on https://blockplay.io.
