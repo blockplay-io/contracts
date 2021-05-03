@@ -4,23 +4,23 @@ import bt.compiler.TargetCompilerVersion;
 import bt.ui.EmulatorWindow;
 
 /**
- * A champion versus challenger game.
- * 
+ * A champion versus challenger game (CIP20 version).
+ *
  * This contract has a weight, this weight (in Burst) is constant.
  * This contract also has a current champion, and challengers can defy the
  * champion by sending a challenging amount in Burst.
- * 
+ *
  * Based on block hash and transaction id a random number will be generated between
  * 0 and weight+challenge. Any number between 0-weight will make the current
  * champion the winner and any number higher than that will make the challenger
  * winner.
- * 
+ *
  * If the current champion wins, he takes the challenger amount as prize. If the
  * challenger is the winner, he gets back his challenge and becomes the new
  * champion.
- * 
+ *
  * There is a 1% fee over the challenges and the activation fee is 30 Burst.
- * 
+ *
  * @author jjos
  */
 @TargetCompilerVersion(CompilerVersion.v0_0_0)
@@ -34,7 +34,7 @@ public class Champions extends Contract {
 	long fee;
 	long rest;
 
-	public static final long ACTIVATION_FEE = 30 * ONE_BURST;
+	public static final long ACTIVATION_FEE = 1000_0000L;  //0.1 Burst
 
 	public void txReceived() {
 		challenge = getCurrentTxAmount() + ACTIVATION_FEE;
@@ -66,7 +66,7 @@ public class Champions extends Contract {
 	@Override
 	protected void blockFinished() {
 		// if there is some balance, round up with the creator
-		rest = getCurrentBalance() - 5*ONE_BURST;
+		rest = getCurrentBalance() - ONE_BURST;
 		if(rest > 0)
 			sendAmount(rest, getCreator());
 	}
@@ -75,6 +75,7 @@ public class Champions extends Contract {
 	 * Main function, for debbuging purposes only, not exported to bytecode.
 	 */
 	public static void main(String[] args) throws Exception {
+		BT.activateCIP20(true);
 		new EmulatorWindow(Champions.class);
 	}
 }
